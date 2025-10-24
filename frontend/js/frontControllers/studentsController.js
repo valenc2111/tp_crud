@@ -131,12 +131,10 @@ function renderStudentTable(students)
     students.forEach(student => 
     {
         const tr = document.createElement('tr');
-    
         tr.appendChild(createCell(student.fullname));
         tr.appendChild(createCell(student.email));
         tr.appendChild(createCell(student.age.toString()));
         tr.appendChild(createActionsCell(student));
-    
         tbody.appendChild(tr);
     });
 }

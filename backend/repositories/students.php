@@ -48,20 +48,33 @@ function getStudentById($conn, $id)
 
 function createStudent($conn, $fullname, $email, $age) 
 {
-    $sql = "INSERT INTO students (fullname, email, age) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $fullname, $email, $age);
-    $stmt->execute();
+    $checkSql = "SELECT id from students where email = ? "; // Selecciona los id con el mismo email haciendo la consulta de sql
+    $checkStmt = $conn->prepare($checkSql); //prepara la consulta previa 
+    $checkStmt = bind_param("s",$email); // reemplaza el valor del ? por $email
+    $checkStmt->execute(); // ejecuta la consulta preparada , luego de reemplazar los valores
+    $result = $checkStmt->get_result(); //asigna a result el valor obtenido de la consulta (en este caso un entero)
 
-    //Se retorna un arreglo con la cantidad e filas insertadas 
-    //y id insertado para validar en el controlador:
-    return 
-    [
-        'inserted' => $stmt->affected_rows,        
-        'id' => $conn->insert_id
-    ];
+    if ($result->num_rows > 0){
+        return [
+            'inserted'=> 0
+        ];
+    }
+    else // es opcional el else
+    {
+        $sql = "INSERT INTO students (fullname, email, age) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssi", $fullname, $email, $age);
+        $stmt->execute();
+                        //Se retorna un arreglo con la cantidad e filas insertadas 
+                        //y id insertado para validar en el controlador:
+        return 
+            [
+                'inserted' => $stmt->affected_rows,        
+                'id' => $conn->insert_id
+            ];
+    }
 }
-
+// modifique
 function updateStudent($conn, $id, $fullname, $email, $age) 
 {
     $sql = "UPDATE students SET fullname = ?, email = ?, age = ? WHERE id = ?";
