@@ -57,7 +57,7 @@ function createStudent($conn, $fullname, $email, $age)
     if ($result->num_rows > 0){
         return [
             'inserted'=> 0,
-            'Error' => 'email_exists'  // error por mail repetido
+            'error' => 'email_exists'  // error por mail repetido
         ];
     }
     else
@@ -75,7 +75,7 @@ function createStudent($conn, $fullname, $email, $age)
         else{
             return [
                 'inserted' => 0,
-                'Error' => 'db_inserted_failed'   // error que no corresponde a la validacion de mail
+                'error' => 'db_inserted_failed'   // error que no corresponde a la validacion de mail
             ];
         }
     } 
