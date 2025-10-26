@@ -2,7 +2,7 @@
 ===============
 
 This project is a group work of a CRUD (Create, Read, Update, and Delete) web application, using HTML, CSS, JavaScript, and PHP technologies.
-
+.
 
 ## Developers:
 
@@ -10,3 +10,4 @@ This project is a group work of a CRUD (Create, Read, Update, and Delete) web ap
 * Trimboli, Mateo Gabriel
 * Salemme Alonso, Agustin
 * Sturla, Bautista
+
