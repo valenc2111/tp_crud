@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () =>
     setupCancelHandler();
     setupPaginationControls();//2.0
 });
-  
+  //modificado
 function setupFormHandler()
 {
     const form = document.getElementById('studentForm');
