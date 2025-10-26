@@ -13,7 +13,6 @@ CREATE USER 'student'@'localhost' IDENTIFIED BY '12345';
 
 /*Otorgar todos los permisos sobre la base de datos*/
 GRANT ALL PRIVILEGES ON students.* TO 'student'@'localhost';
-
 DROP TABLE IF EXISTS `students`;
 CREATE TABLE `students` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
