@@ -53,9 +53,9 @@ function handlePost($conn)
     else 
     {   
         // el mail esta repetido o se genero otro error
-        if (isset($result['error']) && $result['error'] == 'email_exists') // me pregunto si el error fue por mail repetido o no
+        if (isset($result['Error']) && $result['Error'] == 'email_exists') // me pregunto si el error fue por mail repetido o no
         {
-            http_response_code(409);
+            http_response_code(409); // esto devuelve a res.ok un falso 
             echo json_encode(["Error" => "Mail previamente cargado , inserte otro."]);
         }
         else 

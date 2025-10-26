@@ -65,7 +65,7 @@ function createStudent($conn, $fullname, $email, $age)
         $sql = "INSERT INTO students (fullname, email, age) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssi", $fullname, $email, $age);
-        if ($stmt->execute()){
+        if ($stmt->execute()){  // si la funcion que prepare , al ejecutarla no funciona , entonces tira otro error 
             return 
             [
                 'inserted' => $stmt->affected_rows,        
