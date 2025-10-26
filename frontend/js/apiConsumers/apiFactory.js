@@ -20,9 +20,11 @@ export function createAPI(moduleName, config = {})
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
-        if (!res.ok) throw new Error(`Error en ${method}`);
-        return await res.json();
+        const result = await res.json(); // genera una variable llamada result , a la cual le asigna los datos que obtuvo del fetch almacenados en res , json() decodifica esos datos
+        if (!res.ok){
+            throw new Error(result.error || 'Error en ${method}'); // si da error , verifica y notifica cual , si true por izquierda es el mail repetido sino otro es otro error. Antes simplemente tiraba error
+        }
+        return result; // de no ser error , devuelve los datos decodificados
     }
 
     return {

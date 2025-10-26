@@ -47,7 +47,8 @@ function setupFormHandler()
         }
         catch (err)
         {
-            console.error(err.message);
+            document.getElementById('modalMsg').innerText = err.message;
+            document.getElementById('errorModal').style.display = 'block'; 
         }
     });
 }
@@ -122,7 +123,6 @@ async function loadStudents()
         console.error('Error cargando estudiantes:', err.message);
     }
 }
-  
 function renderStudentTable(students)
 {
     const tbody = document.getElementById('studentTableBody');
