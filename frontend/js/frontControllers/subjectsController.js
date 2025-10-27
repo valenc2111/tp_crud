@@ -15,6 +15,8 @@ let totalPages = 1;
 const limit = 3;
 
 import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
+//3.0
+import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
 
 document.addEventListener('DOMContentLoaded', () => 
 {
@@ -113,7 +115,7 @@ async function loadSubjects()
     }
 }
 
-function renderSubjectTable(subjects)
+function renderSubjectTable( )
 {
     const tbody = document.getElementById('subjectTableBody');
     tbody.replaceChildren();
@@ -165,6 +167,14 @@ async function confirmDeleteSubject(id)
 
     try
     {
+        //3.0
+        const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
+        console.log(relations);
+        if (relations.students_subjects.some(rel => rel.subject_id === id)){  //pregunta si el id de la materia existe entre las relaciones
+            alert('No se puede borrar la materia porque tiene estudiantes asociados.');
+            return
+        }
+
         await subjectsAPI.remove(id);
         loadSubjects();
     }
