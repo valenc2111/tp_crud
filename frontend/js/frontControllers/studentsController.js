@@ -9,6 +9,9 @@
 */
 
 import { studentsAPI } from '../apiConsumers/studentsAPI.js';
+//3.0
+import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
+
 
 //2.0
 //For pagination:
@@ -181,6 +184,15 @@ async function confirmDelete(id)
   
     try 
     {
+        //3.0
+        const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
+        console.log(relations); 
+        if (relations.students_subjects.some(rel => rel.student_id === id)){  //pregunta si el id de la materia existe entre las relaciones
+            console.log('No se puede borrar el estudiante porque tiene materias asociadas.');
+            alert('No se puede borrar el estudiante porque tiene materias asociadas.');
+            return
+        }
+
         await studentsAPI.remove(id);
         loadStudents();
     } 
@@ -189,4 +201,5 @@ async function confirmDelete(id)
         console.error('Error al borrar:', err.message);
     }
 }
-  
+
+ 
