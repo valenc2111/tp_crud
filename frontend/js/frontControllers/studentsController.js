@@ -188,7 +188,6 @@ async function confirmDelete(id)
         const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
         console.log(relations); 
         if (relations.students_subjects.some(rel => rel.student_id === id)){  //pregunta si el id de la materia existe entre las relaciones
-            console.log('No se puede borrar el estudiante porque tiene materias asociadas.');
             alert('No se puede borrar el estudiante porque tiene materias asociadas.');
             return
         }
