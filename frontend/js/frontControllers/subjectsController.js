@@ -24,37 +24,49 @@ document.addEventListener('DOMContentLoaded', () =>
     setupPaginationControls();//2.1
 });
 
-function setupSubjectFormHandler() 
-{
+//3.0 new
+function setupSubjectFormHandler() {
   const form = document.getElementById('subjectForm');
-  form.addEventListener('submit', async e => 
-  {
-        e.preventDefault();
-        const subject = 
-        {
-            id: document.getElementById('subjectId').value.trim(),
-            name: document.getElementById('name').value.trim()
-        };
 
-        try 
-        {
-            if (subject.id) 
-            {
-                await subjectsAPI.update(subject);
-            }
-            else
-            {
-                await subjectsAPI.create(subject);
-            }
-            
-            form.reset();
-            document.getElementById('subjectId').value = '';
-            loadSubjects();
-        }
-        catch (err)
-        {
-            console.error(err.message);
-        }
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const subject = {
+      id: document.getElementById('subjectId').value.trim(),
+      name: document.getElementById('name').value.trim()
+    };
+
+    
+    if (subject.name === '') {
+      alert('El nombre no puede estar vacío.');
+      return;
+    }
+
+    try {
+      
+      const allSubjects = await subjectsAPI.fetchAll();
+      const alreadyExists = allSubjects.some(
+        s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id
+      );
+
+      if (alreadyExists) {
+        alert('❌ La materia ya existe ❌');
+        return;
+      }
+
+      
+      if (subject.id) {
+        await subjectsAPI.update(subject);
+      } else {
+        await subjectsAPI.create(subject);
+      }
+
+      form.reset();
+      document.getElementById('subjectId').value = '';
+      loadSubjects();
+    } catch (err) {
+      alert(err.message || 'Error al procesar la solicitud.');
+    }
   });
 }
 
