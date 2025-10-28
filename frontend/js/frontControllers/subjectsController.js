@@ -17,6 +17,7 @@ const limit = 3;
 import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
 //3.0
 import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
+import { showAlert } from '../utils.js';
 
 document.addEventListener('DOMContentLoaded', () => 
 {
@@ -43,10 +44,14 @@ function setupSubjectFormHandler()
             if (subject.id) 
             {
                 await subjectsAPI.update(subject);
+                //3.0
+                showAlert("modificado con exito!")
             }
             else
             {
                 await subjectsAPI.create(subject);
+                //3.0
+                showAlert("creado con exito!")
             }
             
             form.reset();
@@ -171,12 +176,14 @@ async function confirmDeleteSubject(id)
         const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
         console.log(relations);
         if (relations.students_subjects.some(rel => rel.subject_id === id)){  //pregunta si el id de la materia existe entre las relaciones
-            alert('No se puede borrar la materia porque tiene estudiantes asociados.');
+            showAlert("No se puede borrar la materia porque tiene estudiantes asociados.", "warning");
             return
         }
 
         await subjectsAPI.remove(id);
         loadSubjects();
+        //3.0
+        showAlert("¡Eliminado con exito!");
     }
     catch (err)
     {
