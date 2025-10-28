@@ -115,7 +115,7 @@ async function loadSubjects()
     }
 }
 
-function renderSubjectTable( )
+function renderSubjectTable(subjects)
 {
     const tbody = document.getElementById('subjectTableBody');
     tbody.replaceChildren();
