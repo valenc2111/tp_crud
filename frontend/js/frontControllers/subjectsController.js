@@ -50,7 +50,7 @@ function setupSubjectFormHandler() {
       );
 
       if (alreadyExists) {
-        alert('❌ La materia ya existe ❌');
+         showToast('❌ La materia ya existe ❌', 'error');//3.0
         return;
       }
 
@@ -69,6 +69,23 @@ function setupSubjectFormHandler() {
     }
   });
 }
+
+//3.0
+function showToast(message, type = 'error') {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.classList.add('toast', type); // aplica los estilos del CSS
+
+  document.body.appendChild(toast);
+
+  // desaparece despues de 1 segundo
+  setTimeout(() => {
+    toast.classList.add('hide'); // activa la animación fade out
+    setTimeout(() => toast.remove(), 500); // elimina del DOM después de la animación
+  }, 1000);
+}
+
+
 
 function setupCancelHandler()
 {
