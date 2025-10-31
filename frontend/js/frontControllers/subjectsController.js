@@ -36,11 +36,6 @@ function setupSubjectFormHandler() {
       name: document.getElementById('name').value.trim()
     };
 
-    
-    if (subject.name === '') {
-      alert('El nombre no puede estar vacío.');
-      return;
-    }
 
     try {
       
@@ -49,10 +44,10 @@ function setupSubjectFormHandler() {
         s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id
       );
 
-      if (alreadyExists) {
+      /*if (alreadyExists) {
          showToast('❌ La materia ya existe ❌', 'error');//3.0
         return;
-      }
+      }*/
 
       
       if (subject.id) {
@@ -71,7 +66,7 @@ function setupSubjectFormHandler() {
 }
 
 //3.0
-function showToast(message, type = 'error') {
+ function showToast (message, type = 'error') {
   const toast = document.createElement('div');
   toast.textContent = message;
   toast.classList.add('toast', type); // aplica los estilos del CSS
