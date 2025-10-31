@@ -69,15 +69,27 @@ function handlePut($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = updateSubject($conn, $input['id'], $input['name']);
-    if ($result['updated'] > 0) 
-    {
-        echo json_encode(["message" => "Materia actualizada correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+    try {
+        $result = updateSubject($conn, $input['id'], $input['name']);
+
+        if ($result['updated'] > 0) {
+            echo json_encode(["message" => "Materia actualizada correctamente"]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "No se pudo actualizar"]);
+        }
+
+    } catch (mysqli_sql_exception $e) {
+        if ($e->getCode() == 1062) { //maneja el error 1062
+            
+            http_response_code(400);
+            echo json_encode(["error" => "Ya existe una materia con ese nombre"]);
+        } else {
+            // Otros errores graves → 500
+            http_response_code(500);
+            echo json_encode(["error" => "Error interno del servidor"]);
+            error_log($e->getMessage()); // opcional: log para depuración
+        }
     }
 }
 
