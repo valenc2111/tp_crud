@@ -24,39 +24,63 @@ document.addEventListener('DOMContentLoaded', () =>
     setupPaginationControls();//2.1
 });
 
-function setupSubjectFormHandler() 
-{
+//3.0 new
+function setupSubjectFormHandler() {
   const form = document.getElementById('subjectForm');
-  form.addEventListener('submit', async e => 
-  {
-        e.preventDefault();
-        const subject = 
-        {
-            id: document.getElementById('subjectId').value.trim(),
-            name: document.getElementById('name').value.trim()
-        };
 
-        try 
-        {
-            if (subject.id) 
-            {
-                await subjectsAPI.update(subject);
-            }
-            else
-            {
-                await subjectsAPI.create(subject);
-            }
-            
-            form.reset();
-            document.getElementById('subjectId').value = '';
-            loadSubjects();
-        }
-        catch (err)
-        {
-            console.error(err.message);
-        }
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const subject = {
+      id: document.getElementById('subjectId').value.trim(),
+      name: document.getElementById('name').value.trim()
+    };
+
+
+    try {
+      
+      const allSubjects = await subjectsAPI.fetchAll();
+      const alreadyExists = allSubjects.some(
+        s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id
+      );
+
+      /*if (alreadyExists) {
+         showToast('❌ La materia ya existe ❌', 'error');//3.0
+        return;
+      }*/
+
+      
+      if (subject.id) {
+        await subjectsAPI.update(subject);
+      } else {
+        await subjectsAPI.create(subject);
+      }
+
+      form.reset();
+      document.getElementById('subjectId').value = '';
+      loadSubjects();
+    } catch (err) {
+      alert(err.message || 'Error al procesar la solicitud.');
+    }
   });
 }
+
+//3.0
+ function showToast (message, type = 'error') {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.classList.add('toast', type); // aplica los estilos del CSS
+
+  document.body.appendChild(toast);
+
+  // desaparece despues de 1 segundo
+  setTimeout(() => {
+    toast.classList.add('hide'); // activa la animación fade out
+    setTimeout(() => toast.remove(), 500); // elimina del DOM después de la animación
+  }, 1000);
+}
+
+
 
 function setupCancelHandler()
 {
