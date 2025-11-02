@@ -45,13 +45,13 @@ function setupSubjectFormHandler()
             {
                 await subjectsAPI.update(subject);
                 //3.0
-                showAlert("modificado con exito!")
+                showAlert("Modificado con exito!")
             }
             else
             {
                 await subjectsAPI.create(subject);
                 //3.0
-                showAlert("creado con exito!")
+                showAlert("Creado con exito!")
             }
             
             form.reset();
@@ -109,7 +109,6 @@ async function loadSubjects()
     {
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await subjectsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderSubjectTable(data.subjects);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
@@ -172,14 +171,6 @@ async function confirmDeleteSubject(id)
 
     try
     {
-        //3.0
-        const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
-        console.log(relations);
-        if (relations.students_subjects.some(rel => rel.subject_id === id)){  //pregunta si el id de la materia existe entre las relaciones
-            showAlert("No se puede borrar la materia porque tiene estudiantes asociados.", "warning");
-            return
-        }
-
         await subjectsAPI.remove(id);
         loadSubjects();
         //3.0
@@ -187,6 +178,7 @@ async function confirmDeleteSubject(id)
     }
     catch (err)
     {
-        console.error('Error al borrar materia:', err.message);
+        //3.0
+        showAlert(err.message, "warning");
     }
 }
