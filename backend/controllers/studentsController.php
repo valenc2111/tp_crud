@@ -10,6 +10,8 @@
 */
 
 require_once("./repositories/students.php");
+//3.0
+require_once("./repositories/studentsSubjects.php");
 
 // Para GET (usamos la variable superglobal $_GET):
 //https://www.php.net/manual/es/language.variables.superglobals.php
@@ -78,7 +80,18 @@ function handleDelete($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = deleteStudent($conn, $input['id']);
+    //3.0
+    $student_id = (int)$input['id'];    //obtiene el id del input y lo convierte a entero
+    $relationsCount = countAssignmentsByStudent($conn, $student_id);
+
+    if ($relationsCount > 0) {
+        http_response_code(499);
+        echo json_encode(["error" => "El estudiante tiene asignaciones"]);
+        return;
+    }
+
+    $result = deleteSubject($conn, $student_id);
+
     if ($result['deleted'] > 0) 
     {
         echo json_encode(["message" => "Eliminado correctamente"]);

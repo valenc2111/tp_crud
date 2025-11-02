@@ -40,10 +40,14 @@ function setupFormHandler()
             if (student.id) 
             {
                 await studentsAPI.update(student);
+                //3.0
+                showAlert("Modificado con exito!");
             } 
             else 
             {
                 await studentsAPI.create(student);
+                //3.0
+                showAlert("Creado con exito!");
             }
             clearForm();
             loadStudents();
@@ -115,7 +119,6 @@ async function loadStudents()
     {
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await studentsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderStudentTable(data.students);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
@@ -184,21 +187,16 @@ async function confirmDelete(id)
   
     try 
     {
-        //3.0
-        const relations = await studentsSubjectsAPI.fetchAll(); //busca todas las relaciones 
-        console.log(relations); 
-        if (relations.students_subjects.some(rel => rel.student_id === id)){  //pregunta si el id de la materia existe entre las relaciones
-            console.log('No se puede borrar el estudiante porque tiene materias asociadas.');
-            alert('No se puede borrar el estudiante porque tiene materias asociadas.');
-            return
-        }
-
         await studentsAPI.remove(id);
         loadStudents();
+        //3.0
+        showAlert("¡Eliminado con exito!");
     } 
     catch (err) 
     {
         console.error('Error al borrar:', err.message);
+        //3.0
+        showAlert(err.message, "warning");
     }
 }
 

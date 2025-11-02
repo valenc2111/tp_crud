@@ -82,6 +82,18 @@ function getSubjectsByStudent($conn, $student_id)
     return $result->fetch_all(MYSQLI_ASSOC); 
 }
 
+//3.0
+function countAssignmentsByStudent($conn, $student_id)  // Cuenta cuántas asignaciones existen para una materia dada
+{
+    $sql = "SELECT COUNT(*) AS total FROM students_subjects WHERE student_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return (int)$result->fetch_assoc()['total'];
+}
+
+
 function updateStudentSubject($conn, $id, $student_id, $subject_id, $approved) 
 {
     $sql = "UPDATE students_subjects 
