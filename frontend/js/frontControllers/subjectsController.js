@@ -68,7 +68,7 @@ function setupSubjectFormHandler() {
   setTimeout(() => {
     toast.classList.add('hide'); // activa la animación fade out
     setTimeout(() => toast.remove(), 500); // elimina del DOM después de la animación
-  }, 1000);
+  }, 3000);
 }
 
 
