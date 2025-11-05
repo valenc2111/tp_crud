@@ -21,6 +21,12 @@ form input, form button {
 
 /*3.0*/
 .alert{
+  color: white; /* Color del texto principal */
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
     position: fixed;
     top: 0;
     left: 0;

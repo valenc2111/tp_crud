@@ -84,7 +84,7 @@ function handleDelete($conn)
     $relationsCount = countAssignmentsBySubject($conn, $subject_id);
 
     if ($relationsCount > 0) {
-        http_response_code(499);
+        http_response_code(400);
         echo json_encode(["error" => "La materia tiene asignaciones"]);
         return;
     }
