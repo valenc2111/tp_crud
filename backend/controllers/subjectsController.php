@@ -54,8 +54,8 @@ function handlePost($conn) //3.0 new
             http_response_code(400);
             echo json_encode(["error" => "No se pudo crear la materia"]);
         }
-    } catch (mysqli_sql_exception $e) {
-        if ($e->getCode() == 1062) {
+    } catch (mysqli_sql_exception $e) { //1062 error duplicado
+        if ($e->getCode() == 1062)  {
             http_response_code(400);
             echo json_encode(["error" => "La materia ya existe."]);
         } else {
@@ -65,7 +65,7 @@ function handlePost($conn) //3.0 new
     }
 }
 
-function handlePut($conn) 
+function handlePut($conn) //3.0
 {
     $input = json_decode(file_get_contents("php://input"), true);
 

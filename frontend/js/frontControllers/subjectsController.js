@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () =>
     setupPaginationControls();//2.1
 });
 
-//3.0 new
+
 function setupSubjectFormHandler() {
   const form = document.getElementById('subjectForm');
 
