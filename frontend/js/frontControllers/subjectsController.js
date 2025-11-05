@@ -15,6 +15,9 @@ let totalPages = 1;
 const limit = 3;
 
 import { subjectsAPI } from '../apiConsumers/subjectsAPI.js';
+//3.0
+import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
+import { showAlert } from '../utils.js';
 
 document.addEventListener('DOMContentLoaded', () => 
 {
@@ -41,10 +44,14 @@ function setupSubjectFormHandler()
             if (subject.id) 
             {
                 await subjectsAPI.update(subject);
+                //3.0
+                showAlert("Modificado con exito!")
             }
             else
             {
                 await subjectsAPI.create(subject);
+                //3.0
+                showAlert("Creado con exito!")
             }
             
             form.reset();
@@ -102,7 +109,6 @@ async function loadSubjects()
     {
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await subjectsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderSubjectTable(data.subjects);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
@@ -167,9 +173,12 @@ async function confirmDeleteSubject(id)
     {
         await subjectsAPI.remove(id);
         loadSubjects();
+        //3.0
+        showAlert("¡Eliminado con exito!");
     }
     catch (err)
     {
-        console.error('Error al borrar materia:', err.message);
+        //3.0
+        showAlert(err.message, "warning");
     }
 }
