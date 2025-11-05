@@ -40,15 +40,6 @@ function setupSubjectFormHandler() {
     try {
       
       const allSubjects = await subjectsAPI.fetchAll();
-      const alreadyExists = allSubjects.some(
-        s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id
-      );
-
-      /*if (alreadyExists) {
-         showToast('❌ La materia ya existe ❌', 'error');//3.0
-        return;
-      }*/
-
       
       if (subject.id) {
         await subjectsAPI.update(subject);
