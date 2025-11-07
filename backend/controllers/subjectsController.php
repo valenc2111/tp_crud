@@ -42,35 +42,54 @@ function handleGet($conn)
     }
 }
 
-function handlePost($conn) 
+function handlePost($conn) //3.0 new
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = createSubject($conn, $input['name']);
-    if ($result['inserted'] > 0) 
-    {
-        echo json_encode(["message" => "Materia creada correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo crear"]);
+    try {
+        $result = createSubject($conn, $input['name']);
+        if ($result['inserted'] > 0) {
+            echo json_encode(["message" => "Materia creada correctamente"]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "No se pudo crear la materia"]);
+        }
+    } catch (mysqli_sql_exception $e) { //1062 error duplicado
+        if ($e->getCode() == 1062)  {
+            http_response_code(400);
+            echo json_encode(["error" => "La materia ya existe."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "Error interno del servidor"]);
+        }
     }
 }
 
-function handlePut($conn) 
+function handlePut($conn) //3.0
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = updateSubject($conn, $input['id'], $input['name']);
-    if ($result['updated'] > 0) 
-    {
-        echo json_encode(["message" => "Materia actualizada correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+    try {
+        $result = updateSubject($conn, $input['id'], $input['name']);
+
+        if ($result['updated'] > 0) {
+            echo json_encode(["message" => "Materia actualizada correctamente"]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "No se pudo actualizar"]);
+        }
+
+    } catch (mysqli_sql_exception $e) {
+        if ($e->getCode() == 1062) { //maneja el error 1062
+            
+            http_response_code(400);
+            echo json_encode(["error" => "Ya existe una materia con ese nombre"]);
+        } else {
+            // Otros errores graves → 500
+            http_response_code(500);
+            echo json_encode(["error" => "Error interno del servidor"]);
+            error_log($e->getMessage()); // opcional: log para depuración
+        }
     }
 }
 
@@ -89,4 +108,41 @@ function handleDelete($conn)
         echo json_encode(["error" => "No se pudo eliminar"]);
     }
 }
+
+
+/*function handlePost($conn) //3.0 new
+{
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    // Validar que se envió el nombre
+    if (empty($input['name'])) {
+        http_response_code(400);
+        echo json_encode(["error" => "El nombre de la materia es obligatorio."]);
+        return;
+    }
+
+    // 🔹 Validar si ya existe antes de insertar
+    if (subjectExists($conn, $input['name'])) {
+        http_response_code(409); // Código más apropiado: Conflicto
+        echo json_encode(["error" => "Ya existe una materia con ese nombre."]);
+        return;
+    }
+
+    try {
+        $result = createSubject($conn, $input['name']);
+        if ($result['inserted'] > 0) {
+            echo json_encode(["message" => "Materia creada correctamente"]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "No se pudo crear la materia"]);
+        }
+    } catch (mysqli_sql_exception $e) {
+        // Solo manejamos errores graves aquí
+        http_response_code(500);
+        echo json_encode(["error" => "Error interno del servidor"]);
+        error_log($e->getMessage());
+    }
+}*/
+
+
 ?>
