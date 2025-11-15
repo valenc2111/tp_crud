@@ -85,12 +85,12 @@ function handleDelete($conn)
     $relationsCount = countAssignmentsByStudent($conn, $student_id);
 
     if ($relationsCount > 0) {
-        http_response_code(499);
+        http_response_code(400);
         echo json_encode(["error" => "El estudiante tiene asignaciones"]);
         return;
     }
 
-    $result = deleteSubject($conn, $student_id);
+    $result = deleteStudent($conn, $student_id);
 
     if ($result['deleted'] > 0) 
     {

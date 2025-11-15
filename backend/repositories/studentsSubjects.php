@@ -83,7 +83,7 @@ function getSubjectsByStudent($conn, $student_id)
 }
 
 //3.0
-function countAssignmentsByStudent($conn, $student_id)  // Cuenta cuántas asignaciones existen para una materia dada
+function countAssignmentsByStudent($conn, $student_id)  // Cuenta cuántas asignaciones existen para un estudiante dado
 {
     $sql = "SELECT COUNT(*) AS total FROM students_subjects WHERE student_id = ?";
     $stmt = $conn->prepare($sql);
