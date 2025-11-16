@@ -102,7 +102,6 @@ function updateStudent($conn, $id, $fullname, $email, $age)
         $sql = "UPDATE students SET fullname = ?, email = ?, age = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssii", $fullname, $email, $age, $id);
-        $stmt->execute();
 
         if ($stmt->execute()){  // si la funcion que prepare , al ejecutarla no funciona , entonces tira otro error 
             return 
