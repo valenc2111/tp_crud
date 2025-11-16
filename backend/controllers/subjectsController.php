@@ -10,6 +10,8 @@
 */
 
 require_once("./repositories/subjects.php");
+//3.0
+require_once("./repositories/studentsSubjects.php");
 
 function handleGet($conn) 
 {
@@ -96,8 +98,17 @@ function handlePut($conn)
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-    
-    $result = deleteSubject($conn, $input['id']);
+
+    $subject_id = (int)$input['id'];    //obtiene el id del input y lo convierte a entero
+    $relationsCount = countAssignmentsBySubject($conn, $subject_id);
+
+    if ($relationsCount > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "La materia tiene asignaciones"]);
+        return;
+    }
+
+    $result = deleteSubject($conn, $subject_id);
     if ($result['deleted'] > 0) 
     {
         echo json_encode(["message" => "Materia eliminada correctamente"]);

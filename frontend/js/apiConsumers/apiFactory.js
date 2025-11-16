@@ -21,12 +21,14 @@ export function createAPI(moduleName, config = {})
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-
+        
+        
+        const result = await res.json();     // genera una variable llamada result , a la cual le asigna los datos que obtuvo del fetch almacenados en res , json() decodifica esos datos
+        
         if (!res.ok){
-            showToast('❌ La materia ya existe ', 'error');//3.0
-            return;
+            throw new Error(result.error || `Error en ${method}`);
         }
-        return await res.json();
+        return result;
     }
 
     return {

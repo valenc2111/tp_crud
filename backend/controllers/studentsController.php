@@ -10,6 +10,8 @@
 */
 
 require_once("./repositories/students.php");
+//3.0
+require_once("./repositories/studentsSubjects.php");
 
 // Para GET (usamos la variable superglobal $_GET):
 //https://www.php.net/manual/es/language.variables.superglobals.php
@@ -41,7 +43,7 @@ function handleGet($conn)
         echo json_encode($students);
     }
 }
-
+// modifique //
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -49,13 +51,22 @@ function handlePost($conn)
 
     $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
     if ($result['inserted'] > 0) 
-    {
+    {   // Mail no repetido
         echo json_encode(["message" => "Estudiante agregado correctamente"]);
     } 
     else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo agregar"]);
+    {   
+        // el mail esta repetido o se genero otro error
+        if (isset($result['error']) && $result['error'] == 'email_exists') // me pregunto si el error fue por mail repetido o no
+        {
+            http_response_code(409); // esto devuelve a res.ok un falso 
+            echo json_encode(["error" => "Mail previamente cargado , inserte otro."]);
+        }
+        else 
+            {
+                http_response_code(500); 
+                echo json_encode(["error" => "No se pudo agregar"]);
+            }
     }
 }
 
@@ -79,7 +90,18 @@ function handleDelete($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = deleteStudent($conn, $input['id']);
+    //3.0
+    $student_id = (int)$input['id'];    //obtiene el id del input y lo convierte a entero
+    $relationsCount = countAssignmentsByStudent($conn, $student_id);
+
+    if ($relationsCount > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "El estudiante tiene asignaciones"]);
+        return;
+    }
+
+    $result = deleteStudent($conn, $student_id);
+
     if ($result['deleted'] > 0) 
     {
         echo json_encode(["message" => "Eliminado correctamente"]);

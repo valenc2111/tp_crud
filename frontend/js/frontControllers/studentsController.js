@@ -9,6 +9,10 @@
 */
 
 import { studentsAPI } from '../apiConsumers/studentsAPI.js';
+//3.0
+import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
+import { showAlert } from '../utils.js';
+
 
 //2.0
 //For pagination:
@@ -23,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () =>
     setupCancelHandler();
     setupPaginationControls();//2.0
 });
-  
+  //modificado
 function setupFormHandler()
 {
     const form = document.getElementById('studentForm');
@@ -39,17 +43,22 @@ function setupFormHandler()
             if (student.id) 
             {
                 await studentsAPI.update(student);
+                //3.0
+                showAlert("Modificado con exito!");
             } 
             else 
             {
                 await studentsAPI.create(student);
+                //3.0
+                showAlert("Creado con exito!");
             }
             clearForm();
             loadStudents();
         }
         catch (err)
         {
-            console.error(err.message);
+            document.getElementById('modalMsg').innerText = err.message;
+            document.getElementById('errorModal').style.display = 'block'; 
         }
     });
 }
@@ -114,7 +123,6 @@ async function loadStudents()
     {
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await studentsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderStudentTable(data.students);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
@@ -124,7 +132,6 @@ async function loadStudents()
         console.error('Error cargando estudiantes:', err.message);
     }
 }
-  
 function renderStudentTable(students)
 {
     const tbody = document.getElementById('studentTableBody');
@@ -133,12 +140,10 @@ function renderStudentTable(students)
     students.forEach(student => 
     {
         const tr = document.createElement('tr');
-    
         tr.appendChild(createCell(student.fullname));
         tr.appendChild(createCell(student.email));
         tr.appendChild(createCell(student.age.toString()));
         tr.appendChild(createActionsCell(student));
-    
         tbody.appendChild(tr);
     });
 }
@@ -185,10 +190,15 @@ async function confirmDelete(id)
     {
         await studentsAPI.remove(id);
         loadStudents();
+        //3.0
+        showAlert("¡Eliminado con exito!");
     } 
     catch (err) 
     {
         console.error('Error al borrar:', err.message);
+        //3.0
+        showAlert(err.message, "warning");
     }
 }
-  
+
+ 
