@@ -41,20 +41,28 @@ function handleGet($conn)
         echo json_encode($students);
     }
 }
-
+// modifique //
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-
     $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
     if ($result['inserted'] > 0) 
-    {
+    {   // Mail no repetido
         echo json_encode(["message" => "Estudiante agregado correctamente"]);
     } 
     else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo agregar"]);
+    {   
+        // el mail esta repetido o se genero otro error
+        if (isset($result['error']) && $result['error'] == 'email_exists') // me pregunto si el error fue por mail repetido o no
+        {
+            http_response_code(409); // esto devuelve a res.ok un falso 
+            echo json_encode(["error" => "Mail previamente cargado , inserte otro."]);
+        }
+        else 
+            {
+                http_response_code(500); 
+                echo json_encode(["error" => "No se pudo agregar"]);
+            }
     }
 }
 
