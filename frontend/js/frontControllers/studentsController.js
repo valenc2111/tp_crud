@@ -9,6 +9,10 @@
 */
 
 import { studentsAPI } from '../apiConsumers/studentsAPI.js';
+//3.0
+import { studentsSubjectsAPI } from '../apiConsumers/studentsSubjectsAPI.js';
+import { showAlert } from '../utils.js';
+
 
 //2.0
 //For pagination:
@@ -37,10 +41,14 @@ function setupFormHandler()
             if (student.id) 
             {
                 await studentsAPI.update(student);
+                //3.0
+                showAlert("Modificado con exito!");
             } 
             else 
             {
                 await studentsAPI.create(student);
+                //3.0
+                showAlert("Creado con exito!");
             }
             clearForm();
             loadStudents();
@@ -113,7 +121,6 @@ async function loadStudents()
     {
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await studentsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderStudentTable(data.students);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
@@ -181,10 +188,15 @@ async function confirmDelete(id)
     {
         await studentsAPI.remove(id);
         loadStudents();
+        //3.0
+        showAlert("¡Eliminado con exito!");
     } 
     catch (err) 
     {
         console.error('Error al borrar:', err.message);
+        //3.0
+        showAlert(err.message, "warning");
     }
 }
-  
+
+ 

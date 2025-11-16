@@ -8,21 +8,7 @@
 *    Iteration   : 3.0 ( prototype )
 */
 
-//3.0 (version con imagenes)
-export function showAlert(message, type = 'success', time = 5000) {
-  const div = document.createElement('div');      //crea el elemento a agregar
-  div.className = `w3-panel w3-animate-opacity alert`;
-
-  div.style.backgroundImage = `url("../img/${type}.png")` || `url("../img/success.png")`;
-  div.style.backgroundSize = 'contain';
-
-  div.textContent = message;    //inserta el texto en el elemento
-
-  document.body.append(div);    //agrega al body, no importa donde, css lo pone arriba
-  setTimeout(() => div.remove(), time);   //desaparece despues de 5seg
-}
-
-/*// Version Default
+//3.0
 export function showAlert(message, type = 'success', time = 5000) {
   const div = document.createElement('div');      //crea el elemento a agregar
   div.className = `w3-panel w3-animate-opacity alert ${   //estilos en css
@@ -35,4 +21,3 @@ export function showAlert(message, type = 'success', time = 5000) {
   document.body.append(div);    //agrega al body, no importa donde, css lo pone arriba
   setTimeout(() => div.remove(), time);   //desaparece despues de 5seg
 }
-*/
