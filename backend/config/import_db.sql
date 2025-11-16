@@ -27,7 +27,8 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`id`, `fullname`, `email`, `age`) VALUES
 (1,	'Ana García',	'ana@example.com',	21),
 (2,	'Lucas Torres',	'lucas@example.com',	24),
-(3,	'Marina Díaz',	'marina@example.com',	22);
+(3,	'Marina Díaz',	'marina@example.com',	22),
+(4,	'DejadorDeCarreras',	'noestudio@lol.com',	99);
 
 DROP TABLE IF EXISTS `students_subjects`;
 CREATE TABLE `students_subjects` (
@@ -44,7 +45,11 @@ CREATE TABLE `students_subjects` (
 
 INSERT INTO `students_subjects` (`id`, `student_id`, `subject_id`, `approved`) VALUES
 (1,	1,	1,	1),
-(2,	2,	2,	0);
+(2,	2,	2,	0),
+(3,	4,	5,	0),
+(4,	4,	6,	0),
+(5,	4,	7,	0),
+(6,	4,	8,	0);
 
 DROP TABLE IF EXISTS `subjects`;
 CREATE TABLE `subjects` (
@@ -58,6 +63,10 @@ INSERT INTO `subjects` (`id`, `name`) VALUES
 (3,	'Algoritmos y Estructura de Datos I'),
 (4,	'Fundamentos de Informática'),
 (1,	'Tecnologías A'),
-(2,	'Tecnologías B');
+(2,	'Tecnologías B'),
+(5,	'Como dejar la carrera A'),
+(6,	'Como dejar la carrera B'),
+(7,	'Como dejar la carrera C'),
+(8,	'Como dejar la carrera D');
 
 -- 2025-05-28 00:09:08

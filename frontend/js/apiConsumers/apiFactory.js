@@ -21,15 +21,20 @@ export function createAPI(moduleName, config = {})
             body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error(`Error en ${method}`);
+        if (!res.ok){
+            //3.0
+            const errorBody = await res.json();
+            throw new Error(errorBody.error || `Error en ${method}`);   //devuelve al controller el error en especifico o uno generico
+        }
         return await res.json();
     }
 
     return {
         async fetchAll()
         {
-            const res = await fetch(API_URL);
-            if (!res.ok) throw new Error("No se pudieron obtener los datos");
+            const res = await fetch(url);
+            if (!res.ok)
+                throw new Error("Error al obtener todos los datos");
             return await res.json();
         },
         //2.0
