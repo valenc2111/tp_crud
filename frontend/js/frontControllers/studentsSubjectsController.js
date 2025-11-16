@@ -33,8 +33,7 @@ async function initSelects()
     try 
     {
         // Cargar estudiantes
-        const response_s = await studentsAPI.fetchAll();
-        const students = response_s.students; // Acceder a la propiedad students
+        const students = await studentsAPI.fetchAll();
 
         const studentSelect = document.getElementById('studentIdSelect');
         students.forEach(s => 
@@ -46,8 +45,7 @@ async function initSelects()
         });
 
         // Cargar materias
-        const response_sub = await subjectsAPI.fetchAll();
-        const subjects = response_sub.subjects; // Acceder a la propiedad subjects
+        const subjects = await subjectsAPI.fetchAll();
         const subjectSelect = document.getElementById('subjectIdSelect');
         subjects.forEach(sub => 
         {

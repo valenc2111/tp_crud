@@ -70,6 +70,7 @@ function handlePost($conn)
     }
 }
 
+// 3.0 - Manejo mejorado de validación de email en PUT
 function handlePut($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
@@ -81,8 +82,17 @@ function handlePut($conn)
     } 
     else 
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+        // Verificar si el error fue por email duplicado
+        if (isset($result['error']) && $result['error'] == 'email_exists') 
+        {
+            http_response_code(409); // Conflict
+            echo json_encode(["error" => "Mail previamente cargado , inserte otro."]);
+        }
+        else 
+        {
+            http_response_code(500);
+            echo json_encode(["error" => "No se pudo actualizar"]);
+        }
     }
 }
 

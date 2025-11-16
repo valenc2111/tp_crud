@@ -80,16 +80,46 @@ function createStudent($conn, $fullname, $email, $age)
         }
     } 
 }
-// modifique
+
+// 3.0 - Validación de email duplicado al actualizar
 function updateStudent($conn, $id, $fullname, $email, $age) 
 {
-    $sql = "UPDATE students SET fullname = ?, email = ?, age = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssii", $fullname, $email, $age, $id);
-    $stmt->execute();
+    // Verificar si el email ya existe en otro estudiante
+    $checkSql = "SELECT id FROM students WHERE email = ? AND id != ?";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bind_param("si", $email, $id);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
 
+    if ($result->num_rows > 0) {
+        return [
+            'updated' => 0,
+            'error' => 'email_exists'
+        ];
+    }
+    else
+    {
+        $sql = "UPDATE students SET fullname = ?, email = ?, age = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssii", $fullname, $email, $age, $id);
+        $stmt->execute();
+
+        if ($stmt->execute()){  // si la funcion que prepare , al ejecutarla no funciona , entonces tira otro error 
+            return 
+            [
+                'updated' => $stmt->affected_rows,        
+                'id' => $conn->insert_id
+            ];
+        }
+        else{
+            return [
+                'updated' => 0,
+                'error' => 'db_inserted_failed'   // error que no corresponde a la validacion de mail
+            ];
+        }
+    } 
     //Se retorna fila afectadas para validar en controlador:
-    return ['updated' => $stmt->affected_rows];
+
 }
 
 function deleteStudent($conn, $id) 

@@ -57,8 +57,9 @@ function setupFormHandler()
         }
         catch (err)
         {
-            document.getElementById('modalMsg').innerText = err.message;
-            document.getElementById('errorModal').style.display = 'block'; 
+            //document.getElementById('modalMsg').innerText = err.message;
+            //document.getElementById('errorModal').style.display = 'block'; 
+            showAlert(err.message, "warning");
         }
     });
 }
