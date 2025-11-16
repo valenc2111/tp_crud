@@ -21,14 +21,27 @@ export function createAPI(moduleName, config = {})
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        
-        
-        const result = await res.json();     // genera una variable llamada result , a la cual le asigna los datos que obtuvo del fetch almacenados en res , json() decodifica esos datos
-        
-        if (!res.ok){
-            throw new Error(result.error || `Error en ${method}`);
+
+        // Leer como texto y sólo parsear JSON si hay contenido.
+        const text = await res.text();
+        let result = null;
+        if (text && text.trim().length > 0) {
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                // Si no es JSON válido, conservar el texto crudo
+                result = { message: text };
+            }
         }
-        return result;
+
+        if (!res.ok) {
+            // Intentar tomar un mensaje de error desde el body JSON, si existe
+            const errMsg = result && (result.error || result.message) ? (result.error || result.message) : `Error en ${method}`;
+            throw new Error(errMsg);
+        }
+
+        // En caso de respuesta exitosa sin body, devolver un objeto vacío
+        return result ?? {};
     }
 
     return {
