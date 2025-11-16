@@ -42,7 +42,33 @@ function handleGet($conn)
     }
 }
 
-function handlePost($conn) //3.0 new
+
+function handlePost($conn) 
+{
+    $input = json_decode(file_get_contents("php://input"), true);
+    $name=trim($input['name']);
+
+    $existing = getsubjectbyname($conn,$name);
+    //si existe devuelve error
+    if($existing){
+        http_response_code(409); //conflicto
+        echo json_encode(["error" =>"la materia ya existe"]);
+        return;
+    }
+    // si no existe se crea la materia
+    $result = createSubject($conn, $input['name']);
+    if ($result['inserted'] > 0) 
+    {
+        echo json_encode(["message" => "Materia creada correctamente"]);
+    } 
+    else 
+    {
+        http_response_code(500);
+        echo json_encode(["error" => "No se pudo crear"]);
+    }
+}
+
+/*function handlePost($conn) //3.0 new
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
@@ -63,33 +89,30 @@ function handlePost($conn) //3.0 new
             echo json_encode(["error" => "Error interno del servidor"]);
         }
     }
-}
+}*/
 
-function handlePut($conn) //3.0
+function handlePut($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
+    $name = trim($input['name']);
 
-    try {
-        $result = updateSubject($conn, $input['id'], $input['name']);
+    //  verificar si ya existe una materia con ese nombre
+    $existing = getSubjectByName($conn, $name);
+    if ($existing) {
+        http_response_code(409); // conflicto
+        echo json_encode(["error" => "la materia ya existe"]);
+        return;
+    }
 
-        if ($result['updated'] > 0) {
-            echo json_encode(["message" => "Materia actualizada correctamente"]);
-        } else {
-            http_response_code(400);
-            echo json_encode(["error" => "No se pudo actualizar"]);
-        }
+    //   actualiza si puede
+    $result = updateSubject($conn, $input['id'], $name);
 
-    } catch (mysqli_sql_exception $e) {
-        if ($e->getCode() == 1062) { //maneja el error 1062
-            
-            http_response_code(400);
-            echo json_encode(["error" => "Ya existe una materia con ese nombre"]);
-        } else {
-            // Otros errores graves → 500
-            http_response_code(500);
-            echo json_encode(["error" => "Error interno del servidor"]);
-            error_log($e->getMessage()); // opcional: log para depuración
-        }
+    if ($result['updated'] > 0) {
+        echo json_encode(["message" => "Materia actualizada correctamente"]);
+    } 
+    else {
+        http_response_code(500);
+        echo json_encode(["error" => "No se pudo actualizar"]);
     }
 }
 
