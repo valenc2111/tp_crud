@@ -41,9 +41,6 @@ function setupSubjectFormHandler() {
 
 
     try {
-      
-      const allSubjects = await subjectsAPI.fetchAll();
-      
       if (subject.id) {
         await subjectsAPI.update(subject);
       } else {
@@ -54,7 +51,7 @@ function setupSubjectFormHandler() {
       document.getElementById('subjectId').value = '';
       loadSubjects();
     } catch (err) {
-      alert(err.message || 'Error al procesar la solicitud.');
+      showAlert(err.message || 'Error al procesar la solicitud.');
     }
   });
 }
