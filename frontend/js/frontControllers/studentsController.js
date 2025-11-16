@@ -35,6 +35,8 @@ function setupFormHandler()
     {
         e.preventDefault();
         const student = getFormData();
+
+       
     
         try 
         {

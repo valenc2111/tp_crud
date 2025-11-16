@@ -8,6 +8,7 @@
 *    Iteration   : 2.0 ( prototype )
 */
 
+
 export function createAPI(moduleName, config = {}) 
 {
     const API_URL = config.urlOverride ?? `../../backend/server.php?module=${moduleName}`;
@@ -59,4 +60,19 @@ export function createAPI(moduleName, config = {})
             return await sendJSON('DELETE', { id });
         }
     };
+}
+
+//3.0
+ function showToast (message, type = 'error') {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.classList.add('toast', type); // aplica los estilos del CSS
+
+  document.body.appendChild(toast);
+
+  // desaparece despues de 1 segundo
+  setTimeout(() => {
+    toast.classList.add('hide'); // activa la animación fade out
+    setTimeout(() => toast.remove(), 500); // elimina del DOM después de la animación
+  }, 3000);
 }

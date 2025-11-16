@@ -19,6 +19,31 @@ form input, form button {
     display:inline-block;
 }
 
+/* Contenedor de notificación */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: white;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(0);
+}
+
+
+/*3.0*/
+.toast.error {
+  background-color: #e74c3c;
+}
+/*3.0*/
+.toast.hide {
+  opacity: 0;
+  transform: translateY(-20px);
+}
 /*3.0*/
 .alert{
   color: white; /* Color del texto principal */

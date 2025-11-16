@@ -27,41 +27,35 @@ document.addEventListener('DOMContentLoaded', () =>
     setupPaginationControls();//2.1
 });
 
-function setupSubjectFormHandler() 
-{
-  const form = document.getElementById('subjectForm');
-  form.addEventListener('submit', async e => 
-  {
-        e.preventDefault();
-        const subject = 
-        {
-            id: document.getElementById('subjectId').value.trim(),
-            name: document.getElementById('name').value.trim()
-        };
 
-        try 
-        {
-            if (subject.id) 
-            {
-                await subjectsAPI.update(subject);
-                //3.0
-                showAlert("Modificado con exito!")
-            }
-            else
-            {
-                await subjectsAPI.create(subject);
-                //3.0
-                showAlert("Creado con exito!")
-            }
-            
-            form.reset();
-            document.getElementById('subjectId').value = '';
-            loadSubjects();
-        }
-        catch (err)
-        {
-            console.error(err.message);
-        }
+function setupSubjectFormHandler() {
+  const form = document.getElementById('subjectForm');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const subject = {
+      id: document.getElementById('subjectId').value.trim(),
+      name: document.getElementById('name').value.trim()
+    };
+
+
+    try {
+      
+      const allSubjects = await subjectsAPI.fetchAll();
+      
+      if (subject.id) {
+        await subjectsAPI.update(subject);
+      } else {
+        await subjectsAPI.create(subject);
+      }
+
+      form.reset();
+      document.getElementById('subjectId').value = '';
+      loadSubjects();
+    } catch (err) {
+      alert(err.message || 'Error al procesar la solicitud.');
+    }
   });
 }
 
