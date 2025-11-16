@@ -34,6 +34,7 @@ async function initSelects()
     {
         // Cargar estudiantes
         const students = await studentsAPI.fetchAll();
+
         const studentSelect = document.getElementById('studentIdSelect');
         students.forEach(s => 
         {
@@ -44,7 +45,8 @@ async function initSelects()
         });
 
         // Cargar materias
-        const subjects = await subjectsAPI.fetchAll();
+        const subjects  = await subjectsAPI.fetchAll();
+
         const subjectSelect = document.getElementById('subjectIdSelect');
         subjects.forEach(sub => 
         {
@@ -149,7 +151,6 @@ async function loadRelations()
         //2.1
         const resPerPage = parseInt(document.getElementById('resultsPerPage').value, 10) || limit;
         const data = await studentsSubjectsAPI.fetchPaginated(currentPage, resPerPage);
-        console.log(data);
         renderRelationsTable(data.students_subjects);
         totalPages = Math.ceil(data.total / resPerPage);
         document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;

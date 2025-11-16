@@ -32,7 +32,7 @@ export function createAPI(moduleName, config = {})
     return {
         async fetchAll()
         {
-            const res = await fetch(url);
+            const res = await fetch(API_URL);
             if (!res.ok)
                 throw new Error("Error al obtener todos los datos");
             return await res.json();
