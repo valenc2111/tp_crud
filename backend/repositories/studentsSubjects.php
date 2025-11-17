@@ -93,6 +93,16 @@ function countAssignmentsByStudent($conn, $student_id)  // Cuenta cuántas asign
     return (int)$result->fetch_assoc()['total'];
 }
 
+function countAssignmentsBySubject($conn, $subject_id)  // Cuenta cuántas asignaciones existen para una materia dada
+{
+    $sql = "SELECT COUNT(*) AS total FROM students_subjects WHERE subject_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $subject_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return (int)$result->fetch_assoc()['total'];
+}
+
 
 function updateStudentSubject($conn, $id, $student_id, $subject_id, $approved) 
 {
